@@ -7,6 +7,8 @@ interface FileResponse {
     viewLink: string;
 }
 
+const BACKEND_URL = 'http://localhost:8080';
+
 
 const GoogleDriveManager: React.FC = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -18,14 +20,14 @@ const GoogleDriveManager: React.FC = () => {
         }
     };
 
-    const uploadFile = async ()  => {
+    const uploadFile = async () => {
         if (!selectedFile) return;
 
         const formData = new FormData();
         formData.append('file', selectedFile);
 
         try {
-            const response = await axios.post('http://localhost:8080/api/drive/upload', formData, {
+            const response = await axios.post(BACKEND_URL + '/api/drive/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -42,7 +44,7 @@ const GoogleDriveManager: React.FC = () => {
         if (!file) return;
 
         try {
-            await axios.delete(`http://localhost:8080/api/drive/delete/${file.fileId}`);
+            await axios.delete(BACKEND_URL + `/api/drive/delete/${file.fileId}`);
             alert('File deleted successfully!');
         } catch (error) {
             console.error('Error deleting file:', error);
@@ -61,7 +63,7 @@ const GoogleDriveManager: React.FC = () => {
                     <p>View Link: {file.viewLink}</p>
                     <p>Content Link: {file.contentLink}</p>
                     {/* Only img */}
-                    <img src={`https://drive.google.com/thumbnail?id=${file.fileId}`} alt="a"/>
+                    <img src={`https://drive.google.com/thumbnail?id=${file.fileId}`} alt="a" />
                     {/* File chung pdf, img, video,... */}
                     <iframe title='a' src={`https://drive.google.com/file/d/${file.fileId}/preview`} width="640" height="480"></iframe>
                     <button onClick={deleteFile}>Delete File</button>
